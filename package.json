@@ -10,7 +10,8 @@
     "ask": "bun src/cli.ts ask",
     "mcp": "bun mcp/server.ts",
     "test": "bun test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "replica": "bun src/replica/cli.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",

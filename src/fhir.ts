@@ -42,6 +42,8 @@ export type FhirClientOptions = {
   retries?: number;
   /** Hard cap on Bundle pages followed per search, so one query can't walk a whole server. */
   maxPages?: number;
+  /** Tag every search is scoped to (system|code). Defaults to the pre-visit demo tag. */
+  tag?: string;
 };
 
 const RETRYABLE = new Set([429, 500, 502, 503, 504]);
@@ -52,6 +54,7 @@ export class FhirClient {
   private readonly timeoutMs: number;
   private readonly retries: number;
   private readonly maxPages: number;
+  readonly tag: string;
 
   constructor(opts: FhirClientOptions = {}) {
     this.base = (opts.base ?? process.env.FHIR_BASE ?? DEFAULT_BASE).replace(/\/$/, "");
@@ -59,11 +62,12 @@ export class FhirClient {
     this.timeoutMs = opts.timeoutMs ?? 20_000;
     this.retries = opts.retries ?? 2;
     this.maxPages = opts.maxPages ?? 5;
+    this.tag = opts.tag ?? DEMO_TAG_PARAM;
   }
 
   /** Search one resource type and follow `next` links up to maxPages. */
   async search(resourceType: string, params: Record<string, string>): Promise<Resource[]> {
-    const qs = new URLSearchParams({ ...params, _tag: DEMO_TAG_PARAM, _count: "50" });
+    const qs = new URLSearchParams({ ...params, _tag: this.tag, _count: "50" });
     let url: string | undefined = `${this.base}/${resourceType}?${qs}`;
     const out: Resource[] = [];
 
@@ -73,6 +77,11 @@ export class FhirClient {
       url = bundle.link?.find((l) => l.relation === "next")?.url;
     }
     return out;
+  }
+
+  /** Create one resource (POST /{type}). Used by the replica only when writing is explicitly turned on. */
+  async create(resource: Resource): Promise<Resource> {
+    return this.request("POST", `${this.base}/${resource.resourceType}`, resource.resourceType, ["create"], resource);
   }
 
   /** POST a transaction Bundle to the server root (used by the seed script only). */
