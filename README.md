@@ -89,7 +89,7 @@ The trace and procedure formats are a contract shared with a screen-based counte
 - The feature catalog is hand-built. In the real problem, discovering which features matter from raw screens and files is the hard part, and it is not solved here.
 - Observation happens at the FHIR layer. In a clinic that means an API proxy or EHR audit logs, and plenty of work never touches FHIR, which is why a screen half exists.
 - The tree is the right tool for a demo you can read line by line. It is not a claim that trees are how this scales.
-- The Claude SOP path is tested against a fake API only; without credentials the template writer runs and says so.
+- The Claude SOP path ran live on 10/17/26 (claude-opus-5-5, about $0.05 per run): 8 steps, every one citing real rule ids, plus 14 questions for the worker, including a collision the deterministic check had filtered out (two policies and coverage ending soon). Without credentials the template writer runs and says so.
 
 ## Data
 
