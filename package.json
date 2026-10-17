@@ -1,0 +1,24 @@
+{
+  "name": "fhir-previsit-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pre-visit insurance check agent over a FHIR R4 server: minimum-necessary tools, audit log, LLM planner with a deterministic fallback, MCP server.",
+  "type": "module",
+  "scripts": {
+    "seed": "bun scripts/seed.ts",
+    "worklist": "bun src/cli.ts worklist",
+    "ask": "bun src/cli.ts ask",
+    "mcp": "bun mcp/server.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "typescript": "^7.0.2"
+  }
+}
